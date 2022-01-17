@@ -110,7 +110,7 @@ if __name__ == '__main__':
                     exercise = 'eraser'
 
             ### TIMER
-            if previous_exercise != exercise:
+            if previous_exercise != exercise and exercise != 'eraser':
                 diff = (datetime.now() - start_time).seconds
                 while diff <= timer_duration:
                     success, img = cap.read()

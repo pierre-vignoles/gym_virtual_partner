@@ -14,4 +14,5 @@ You have to install the python librairies : `pip install -r requirements.txt`
 Execute the following command in a terminal : `python fitness.py`  
 
 ## Demo
+![badge-fitnessl](https://github.com/pierre-vignoles/gym_virtual_partner/blob/master/img/demo_gif.gif)
 

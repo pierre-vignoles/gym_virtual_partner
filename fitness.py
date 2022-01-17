@@ -43,7 +43,10 @@ def function_bar_text(bar, percentage, color):
     cv2.putText(img, f'{int(percentage)} %', (1100, 75), cv2.FONT_HERSHEY_PLAIN, 4, color, 4)
 
     # Count
-    cv2.rectangle(img, (0, 450), (400, 750), (0, 255, 0), cv2.FILLED)
+    if count < 10:
+        cv2.rectangle(img, (0, 450), (250, 750), (0, 255, 0), cv2.FILLED)
+    else:
+        cv2.rectangle(img, (0, 450), (400, 750), (0, 255, 0), cv2.FILLED)
     cv2.putText(img, str(int(count)), (45, 670), cv2.FONT_HERSHEY_PLAIN, 15, (255, 0, 0), 25)
 
 

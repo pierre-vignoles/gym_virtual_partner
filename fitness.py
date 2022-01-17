@@ -1,3 +1,4 @@
+from datetime import datetime
 import cv2
 import cvzone
 from cvzone import PoseModule
@@ -16,14 +17,15 @@ def function_init_header() -> List[List[int]]:
     return overlayList
 
 
-def function_init_var() -> Tuple[int, int, str, str, List[List[int]], List[int]]:
+def function_init_var() -> Tuple[int, int, str, str, List[List[int]], List[int], int]:
     count = 0
     direction = 0
     exercise = 'squat'
     previous_exercise = 'squat'
     overlayList = function_init_header()
     header = overlayList[0]
-    return count, direction, exercise, previous_exercise, overlayList, header
+    timer_duration: int = 3
+    return count, direction, exercise, previous_exercise, overlayList, header, timer_duration
 
 
 def function_init_webcam() -> cv2.VideoCapture:
@@ -74,12 +76,13 @@ def function_exercise(exercise: str, previous_exercise: str, angle_min: int, ang
 
 
 if __name__ == '__main__':
-    count, direction, exercise, previous_exercise, overlayList, header = function_init_var()
+    count, direction, exercise, previous_exercise, overlayList, header, timer_duration = function_init_var()
     cap = function_init_webcam()
     detector = cvzone.PoseModule.PoseDetector()
 
     while True:
         success, img = cap.read()
+        start_time = datetime.now()
         img = cv2.flip(img, 1)
         img = detector.findPose(img, False)
         lmList = detector.findPosition(img, False)
@@ -102,6 +105,20 @@ if __name__ == '__main__':
                 elif 1085 < x1 < 1280:
                     header = overlayList[3]
                     exercise = 'eraser'
+
+            ### TIMER
+            if previous_exercise != exercise:
+                diff = (datetime.now() - start_time).seconds
+                while diff <= timer_duration:
+                    success, img = cap.read()
+                    img = cv2.flip(img, 1)
+                    timer_text: str = str(timer_duration - diff) if str(timer_duration - diff) != "0" else "GO !"
+                    cv2.putText(img, timer_text, (600, 500) if timer_text != "GO !" else (380, 500),
+                                cv2.FONT_HERSHEY_PLAIN, 15, (255, 0, 0), 25)
+                    img[0:125, 0:1280] = header
+                    cv2.imshow("Image", img)
+                    diff = (datetime.now() - start_time).seconds
+                    cv2.waitKey(1)
 
             ### EXERCISE
             if exercise == 'curl':
